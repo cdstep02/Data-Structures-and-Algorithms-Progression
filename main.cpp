@@ -1,58 +1,44 @@
-#include "AUList.h"
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <string>
-using namespace std;
-//figure this out today
-AUList csvtoAUList(string csvfile) { //convert a csv file to a list structure
-    AUList retCCList;
-    int counter = 0;
-	ifstream ReadFile(csvfile); //open the csv file for reading
-    string line, curvalue;
-    //here we need to delete the columns in the csv file
-	getline(ReadFile, line); //throw away the first line (column names)
-    while (getline(ReadFile,line) && counter < 200) {        
-        stringstream ss(line); //turn the line into a string-stream
-        int fielditer=0;
-        AircraftStrike newrec;
-		while(getline(ss, curvalue, ',')){ //Separate each variable per sample from the comma separator
-            switch (fielditer) { //some values need to be converted to an int using stoi
-            	case 0:
-            		if(curvalue == "")//conditional statement ensures that we 
-            		{
-            			newrec.year = -1;
-					}
-					else
-					{
-						newrec.year=stoi(curvalue);
-					}
-				  	break;
-            	case 1: newrec.aircraft=curvalue; break;
-            	case 2:
-					if(curvalue == "")
-					{
-						newrec.engines = -1;
-					} 
-					else
-					{
-						newrec.engines=stoi(curvalue);
-					}
-				 	break;
-            	case 3: newrec.phase=curvalue; break;
-            	case 4: newrec.species=curvalue; break;
-            	case 5: newrec.impact=curvalue; break; 
-			}
-            fielditer++;
-        }
-        retCCList.PutItem(newrec);
-        counter++;
-    }
-    return retCCList;
-}
+#include "BST.h"
+//#include "CLQueue.h"
 
-int main(int argc, char** argv) {
-	AUList StrikeData=csvtoAUList("database.csv");
-	StrikeData.PrintList(); //Print the data record-by-record
+using namespace std;
+int main() {
+  BST myBST;
+  myBST.PutItem(6);
+  myBST.PutItem(3);
+  myBST.PutItem(7);
+  myBST.PutItem(9);
+  myBST.PutItem(5);
+  myBST.PutItem(1);
+  BST clonedBST(myBST);
+  myBST.DeleteItem(3);
+  
+  cout<<"My Tree: ";
+  myBST.PrintTree();
+  cout<<"Cloned Tree: ";
+  clonedBST.PrintTree();
+  clonedBST.MakeEmpty();
+  cout<<"Cloned Tree V2: ";
+  clonedBST.PrintTree();
+  int curItem;
+  myBST.ResetTree(PRE_ORDER);
+  cout<<"My Tree Pre-Order: ";
+  while (!(myBST.TravEmpty())) {
+    cout<< myBST.GetNextItem();
+    if (!myBST.TravEmpty())
+      cout<<", ";
+  }
+  cout<<endl;
+  
+  myBST.ResetTree(POST_ORDER);
+  cout<<"My Tree Post-Order: ";
+  while (!(myBST.TravEmpty())) {
+    cout<< myBST.GetNextItem();
+    if (!myBST.TravEmpty())
+      cout<<", ";
+  }
+  cout<<endl;
+  cout << myBST.GetHeight() << endl;
+  cout << myBST.GetIHRatio() << endl;
+  
 }
-    
